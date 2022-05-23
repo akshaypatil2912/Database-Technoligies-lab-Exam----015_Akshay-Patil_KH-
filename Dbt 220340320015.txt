@@ -1,0 +1,309 @@
+Instructions:-  This exam consists of 2 sections.  All questions are compulsory. Total time for this test is 90 minutes.  
+
+Connect to MySQL database with your respective username and password.
+
+Section I									(30 marks)
+
+1.	Create table DEPT with the following structure:-
+DEPTNO			int(2)
+DNAME			varchar(15)
+LOC				varchar(10)
+-------
+
+create table dept (
+DEPTNO	int(2),
+DNAME	varchar(15),
+LOC		varchar(10)
+);
+-------
+
+--------------------------------------------------
+1.1			Insert the following rows into the DEPT table:-
+			10	ACCOUNTING	NEW YORK
+			20	RESEARCH		DALLAS
+			30	SALES		CHICAGO
+			40	OPERATIONS	BOSTON
+			-------
+
+			insert into dept values
+			(10,	'ACCOUNTING',	'NEW YORK'),
+			(20,	'RESEARCH',	'DALLAS'),
+			(30,	'SALES',	'CHICAGO'),
+			(40,	'OPERATIONS',	'BOSTON');
+			-------
+---------------------------------------------------------------------------------------------------
+
+
+
+2.	Create table EMP with the following structure:-
+EMPNO			int(4)
+ENAME			varchar(10)
+JOB				varchar(9)
+HIREDATE			date
+SAL				float(7,2)
+COMM			float(7,2)
+DEPTNO			int(2)
+-------
+create table EMP (
+EMPNO		int(4),
+ENAME		varchar(10),
+JOB			varchar(9),
+HIREDATE	date,
+SAL			float(7,2),
+COMM		float(7,2),
+DEPTNO		int(2)
+);
+-------
+
+2.1			Insert the following rows into the EMP table:-
+			7839	KING		MANAGER	1991-11-17	5000	NULL	10
+			7698	BLAKE	CLERK	1981-05-01	2850	NULL	30
+			7782	CLARK	MANAGER	1981-06-09	2450	NULL	10
+			7566	JONES	CLERK	1981-04-02	2975	NULL 20
+			7654	MARTIN	SALESMAN	1981-09-28	1250	1400	30
+			7499	ALLEN	SALESMAN	1981-02-20	1600	300	30
+			--
+
+			insert into EMP values
+			(7839,	'KING',	  'MANAGER',	'1991-11-17',	5000,	NULL,	10),
+			(7698,	'BLAKE',  'CLERK'	,   '1981-05-01',	2850,	NULL,	30),
+			(7782,	'CLARK',  'MANAGER'	,	'1981-06-09',	2450,	NULL,	10),
+			(7566,	'JONES',  'CLERK'	,	'1981-04-02',	2975,	NULL,	20),
+			(7654,	'MARTIN', 'SALESMAN',	'1981-09-28',	1250,	1400,	30),
+			(7499,	'ALLEN'	, 'SALESMAN',	'1981-02-20',	1600,	300,	30);
+			--
+
+---------------------------------------------------------------------------------------------------
+
+Write SELECT statements to achieve the following:-
+3.	Display all the employees where SAL between 2500 and
+ 5000 (inclusive of both).
+-------
+
+ select ename,sal from emp
+where sal between 2500 and 5000;
+-------
+	ename	sal
+	KING	5000.00
+	BLAKE	2850.00
+	JONES	2975.00
+-------
+---------------------------------------------------------------------------------------------------
+ 
+ 
+4.	Display all the ENAMEs in descending order of ENAME.
+-------
+
+select ename from emp
+order by ename desc;
+-------
+	ename
+	MARTIN
+	KING
+	JONES
+	CLARK
+	BLAKE
+	ALLEN
+-------	
+---------------------------------------------------------------------------------------------------
+
+
+5.	Display all the JOBs in lowercase.
+-------
+
+select lower(job) from emp;
+-------
+	lower(job)
+	manager
+	clerk
+	manager
+	clerk
+	salesman
+	salesman
+-------
+---------------------------------------------------------------------------------------------------
+
+
+
+6.	Display the ENAMEs and the lengths of the ENAMEs.
+-------
+
+select ename,length(ename) from emp;
+-------
+	ename	length(ename)
+	KING	4
+	BLAKE	5
+	CLARK	5
+	JONES	5
+	MARTIN	6
+	ALLEN	5
+-------
+---------------------------------------------------------------------------------------------------
+
+7.	Display the DEPTNO and the count of employees who belong
+ to that DEPTNO .
+-------
+
+ select deptno,count(deptno) from emp
+	group by deptno;
+------- 
+ 	deptno	count(deptno)
+	10		2
+	30		3
+	20		1
+ -------
+ ---------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+ 
+8.	Display the DNAMEs and the ENAMEs who belong to that
+ DNAME.
+-------
+
+select dname,ename from emp,dept
+where  emp.deptno =dept.deptno; 
+-------
+	dname		ename
+	ACCOUNTING	KING
+	SALES		BLAKE
+	ACCOUNTING	CLARK
+	RESEARCH	JONES
+	SALES		MARTIN
+	SALES		ALLEN
+-------
+---------------------------------------------------------------------------------------------------
+
+
+9.	Display the position at which the string ‘AR’ occurs in
+ the ename.
+-------
+
+ select ename,instr(ename,'ar') from emp;
+------- 
+ 	ename	instr(ename,'ar')
+	KING	0
+	BLAKE	0
+	CLARK	3
+	JONES	0
+	MARTIN	2
+	ALLEN	0
+-------
+-------------------------------------------------------------------------------------------------------
+ 
+10.	Display the HRA for each employee given that 
+HRA is 20% of SAL.
+-------
+
+select ename,sal,sal*0.2 as HRA from emp;
+-------
+	ename	sal	HRA
+	KING	5000.00	1000.00
+	BLAKE	2850.00	570.00
+	CLARK	2450.00	490.00
+	JONES	2975.00	595.00
+	MARTIN	1250.00	250.00
+	ALLEN	1600.00	320.00
+-------
+--------------------------------------------------------------------------------------------------
+
+
+Section II									(10 marks)
+
+1.Write a stored procedure by the name of PROC1 that accepts
+ two varchar strings as parameters. Your procedure should
+ then determine if the first varchar string exists inside 
+ the varchar string. For example, if string1 = ‘DAC’ and 
+ string2 = ‘CDAC, then string1 exists inside string2.  
+ The stored procedure should insert the appropriate message
+ into a suitable TEMPP output table. Calling program for the
+ stored procedure need not be written.
+-------
+
+create table tempp
+(output varchar (30));
+
+delimiter //
+create procedure PROC1(string1 varchar(20), string2 varchar(20))
+begin
+	if instr(string1,string2)>0  then
+		insert into TEMPP 
+        values ('string2 exists inside string1');
+        elseif 
+         instr(string2,string1)>0 then
+         insert into TEMPP 
+        values ('string1 exists inside string2');
+        else
+        insert into TEMPP 
+        values ('None of the string exist in each other');
+		end if;
+end; //
+delimiter ;
+
+call  PROC1('DAC','CDAC');
+call  PROC1('CDAC','DAC');
+select * from tempp;
+
+
+		output
+	string1 exists inside string2
+	string2 exists inside string1
+
+-------------------------------------------------------------
+
+
+
+
+
+2. Create a stored function by the name of FUNC1 to take 
+three parameters, the sides of a triangle. The function 
+should return a Boolean value:- TRUE if the triangle is 
+valid, FALSE otherwise. A triangle is valid if the length
+ of each side is less than the sum of the lengths of the 
+ other two sides. Check if the dimensions entered can form
+ a valid triangle. Calling program for the stored function
+ need not be written.
+-------
+
+	create table temp1
+(L float,W float,H float,output varchar(20));
+
+delimiter //
+create function FUNC1(L float,W float,H float)
+returns boolean
+deterministic
+begin
+		if L+W>H AND L+H>W AND H+W>L THEN
+        return true;
+        else
+        return false;
+        end if;
+				
+end; //
+delimiter ;
+
+delimiter //
+create procedure prod(L float,W float,H float)
+begin
+declare  result boolean;
+set result=FUNC1(L,W,H);
+
+if result then
+			insert into temp1 values(L,W,H,'valid triangle');
+            else
+            insert into temp1 values(L,W,H,'Invalid triangle');
+			end if;
+end; //
+delimiter ;
+
+call prod(10,15,20);
+call prod(10,15,40);
+
+select * from temp1;
+
+OutPut:-
+	L	W	H	output
+	10	15	20	valid triangle
+	10	15	40	Invalid triangle
+	
+-------------------------------------------------------------
